@@ -1,0 +1,11 @@
+Ao criar relacoes 1:N, a tabela que tem muitos do outro nao conterá nenhum campo da outra tabela, apesar de terem relacao, já que essa tabela nao depende da outra para existir, é a outra que depende dela.
+
+Caso o seu controller esteja dando rota nao encontrada, é provável que seja pelo fato de o seu controller nao estar registrado no modulo dele
+
+Nao é pq vc colocou no app.module que a coisa estará disponível para tod mundo, só se vc importar o app.module no modulo onde vc esta a usar a tal coisa. Ou seja, se vc esta a usar o prismaservice no modulo de usuario, entao coloque o prismaservice nos providers de users, nao é pq esta no app.module que vai automaticamente fazer parte do usermodule.
+
+Aqui no prisma se algo falhar dá erro no console mesmo (Na hora de interagir com a bd, por isso precisa-se de validar as coisas)
+
+Password: rigoberto123@R
+
+Se quisermos fazer o onDelete Cascade no prisma, coloamos uma virgula naquele que so tem um registro e:  onDelete: Cascade, onUpdate: Cascade
