@@ -9,3 +9,5 @@ Aqui no prisma se algo falhar dá erro no console mesmo (Na hora de interagir co
 Password: rigoberto123@R
 
 Se quisermos fazer o onDelete Cascade no prisma, coloamos uma virgula naquele que so tem um registro e:  onDelete: Cascade, onUpdate: Cascade
+
+Para gerar um crud completo: nest g resource NomeDoModulo
