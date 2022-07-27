@@ -10,4 +10,23 @@ Password: rigoberto123@R
 
 Se quisermos fazer o onDelete Cascade no prisma, coloamos uma virgula naquele que so tem um registro e:  onDelete: Cascade, onUpdate: Cascade
 
-Para gerar um crud completo: nest g resource NomeDoModulo
+Para gerar um crud completo: nest g resource NomeDoModulo, vai te perguntar algumas coisas.
+
+OBS: Sempre que vc cria um modulo, coloque esse modulo no app.module (Caso ele nao for automaticamente)
+
+o JWT consiste em 3 partes separados por . (Header, Payload, Signature)
+Exemplo: xxxxx.yyyyy.zzzzz
+
+Nao passe uma informacao extremamente importante dentro de um token, passe coisas como admin, etc
+pois é possível decodificar tudo.
+A codificacao vai no payload do jwtService.sign
+
+Unauthorized nao tem token (401), forbidden nao tem autorização (403)
+
+// Quando vc altera uma coisa no schema, vc nao está criando a migration, para criar a migration vc precisa fazer um npx prisma migrate dev --name rename_author_columns --create-only
+
+Para rodar uma migracao com o create only, vc vai até ao ficheiro e faz o seguinte: 
+
+// Para adicionar uma constraint, tipo adicionar a constraint unique numa tabela que já existe, vc não precisa ir alterar nada, só cria e roda a migration. Vc precisa alterar alguma coisa quando vc vai mudar o nome por exemplo ou ao adicionar um novo nome.
+
+// Estudar sobre como adicionar um campo na tabela sem perder dados
