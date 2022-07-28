@@ -3,14 +3,13 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   UseInterceptors,
   UploadedFiles,
-  BadRequestException,
   Res,
-  ParseIntPipe
+  ParseIntPipe,
+  Query
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ProductService } from './product.service';
@@ -20,7 +19,8 @@ import { Public } from 'src/auth/decorators/skip-auth';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enum/role.enum';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
+import { FIlterDto } from 'src/user/roles/dtos/filter';
+import { fileInterceptorOptionsHelper } from './helper/file_interceptor_options';
 
 @Controller('product')
 export class ProductController {
@@ -29,55 +29,49 @@ export class ProductController {
   @Post()
   @Roles(Role.Admin)
   @UseInterceptors(
-    FilesInterceptor('images', null, {
-      storage: diskStorage({
-        destination: './public',
-        filename: (req, file, cb) => {
-          cb(null, `${Date.now()} - ${file.originalname}`);
-        },
-      }),
-      fileFilter(req, file, cb) {
-        if (['image/png', 'image/jpeg'].includes(file.mimetype)) {
-          cb(null, true);
-        } else {
-          return cb(
-            new BadRequestException(
-              'Arquivos desta extensão não são permitidos',
-            ),
-            false,
-          );
-        }
-      },
-      limits: {
-        fileSize: 2000000,
-      },
-    }),
+    FilesInterceptor('images', null, fileInterceptorOptionsHelper),
   )
   create(
     @Body() createProductDto: CreateProductDto,
     @UploadedFiles() files: Array<Express.Multer.File>,
   ) {
-    // Problema: Ele cria as fotos mesmo quando dá problema nos registros, mas ele não cria os registros se der problema nas fotos pq o interceptor é chamado primeiro em relação ao validationPipe
+    // Prioridade: Interceptor e depois Pipe
     createProductDto.images = files;
     return this.productService.create(createProductDto);
   }
 
   @Public()
   @Get()
-  findAll() {
-    return this.productService.findAll();
+  findAll(@Query() query: FIlterDto) {
+    const { skip = 0, take = 1 } = query;
+    return this.productService.findAll({ skip, take });
   }
 
   @Public()
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.productService.findOne(id);
+  }
+
+  @Public()
+  @Get('/product_name/get')
+  findProductByName(@Query() query) {
+    const { name } = query;
+    return this.productService.findProductByName(name);
   }
 
   @Roles(Role.Admin)
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productService.update(+id, updateProductDto);
+  @Post(':id')
+  @UseInterceptors(
+    FilesInterceptor('images', null, fileInterceptorOptionsHelper),
+  )
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateProductDto: UpdateProductDto,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ) {
+    updateProductDto.images = files;
+    return this.productService.update(id, updateProductDto);
   }
 
   @Roles(Role.Admin)

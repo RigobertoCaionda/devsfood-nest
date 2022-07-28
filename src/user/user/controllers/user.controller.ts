@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, Req } from '@nestjs/common';
 import { UserDto } from '../dtos/user';
 import { UserService } from '../services/user.service';
 import * as bcrypt from 'bcrypt';
@@ -6,6 +6,8 @@ import { FIlterDto } from 'src/user/roles/dtos/filter';
 import { UpdateUserDto } from '../dtos/update_user';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enum/role.enum';
+import { Public } from 'src/auth/decorators/skip-auth';
+import { Request } from 'express';
 
 @Controller('user')
 export class UserController {
@@ -25,6 +27,11 @@ export class UserController {
     @Get(':id')
     show(@Param('id', ParseIntPipe) id: number) {
         return this.userService.show(id);
+    }
+
+    @Get('info/me')
+    me(@Req() req: Request) {
+        return this.userService.me(req.user);
     }
 
     @Roles(Role.Admin)

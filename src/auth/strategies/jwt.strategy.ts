@@ -14,6 +14,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) { // Caso o user estiver autenticado, ele retorna o payload que nós criamos e podemos usar esse payload para retornar algum desses dados na request
-    return { name: payload.name, role: payload.role }; // O que for retornado aqui será enviado na requisição.
+    return { id: payload.id, name: payload.name, role: payload.role }; // O que for retornado aqui será enviado na requisição.
   }
 }
