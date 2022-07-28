@@ -9,7 +9,7 @@ import {
   UploadedFiles,
   Res,
   ParseIntPipe,
-  Query
+  Query,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ProductService } from './product.service';

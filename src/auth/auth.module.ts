@@ -11,16 +11,12 @@ import { JwtConfig } from './env-helper/jwt.config';
 @Module({
   controllers: [AuthController],
   providers: [
-    AuthService, 
-    PrismaService, 
+    AuthService,
+    PrismaService,
     RolesService,
-     JwtStrategy,
-     { provide: 'APP_GUARD', useClass: JwtAuthGuard } // Guardando todas as rotas do sistema
-    ],
-  imports: [
-    JwtModule.registerAsync(JwtConfig),
-  ]
+    JwtStrategy,
+    { provide: 'APP_GUARD', useClass: JwtAuthGuard }, // Aplicando guardas em todas as rotas do sistema
+  ],
+  imports: [JwtModule.registerAsync(JwtConfig)],
 })
-export class AuthModule {
-  
-}
+export class AuthModule {}

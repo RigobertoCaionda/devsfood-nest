@@ -144,7 +144,7 @@ export class ProductService {
           },
         });
         if (imageExists) throw new BadRequestException('Imagem já existe');
-        const image = await this.prisma.image.createMany({ data: imgData });
+        await this.prisma.image.createMany({ data: imgData });
       }
     }
     const new_product = await this.prisma.product.update({
