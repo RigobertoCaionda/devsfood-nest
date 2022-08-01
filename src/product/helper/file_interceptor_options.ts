@@ -6,7 +6,7 @@ export const fileInterceptorOptionsHelper: MulterOptions = {
   storage: diskStorage({
     destination: './public',
     filename: (req, file, cb) => {
-      cb(null, `${Date.now()} - ${file.originalname}`);
+      cb(null, `${Date.now()}-${file.originalname}`);
     },
   }),
   fileFilter(req, file, cb) {

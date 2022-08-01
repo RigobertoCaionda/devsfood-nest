@@ -30,3 +30,5 @@ Para rodar uma migracao com o create only, vc vai até ao ficheiro e faz o segui
 // Para adicionar uma constraint, tipo adicionar a constraint unique numa tabela que já existe, vc não precisa ir alterar nada, só cria e roda a migration. Vc precisa alterar alguma coisa quando vc vai mudar o nome por exemplo ou ao adicionar um novo nome.
 
 // Estudar sobre como adicionar um campo na tabela sem perder dados
+
+// Relacionamentos 1 para muitos, o filho deve levar o id do pai pq ele deve saber quem +é o pai dele.

@@ -6,7 +6,8 @@ import {
 import { PrismaService } from 'src/services/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { unlink } from 'fs/promises';
+import { unlink, rmdir, readdir } from 'fs/promises';
+import appConfig from 'src/auth/env-helper/app.config';
 
 @Injectable()
 export class ProductService {
@@ -15,6 +16,7 @@ export class ProductService {
     let newCreateProductDto = {
       name: createProductDto.name,
       price: createProductDto.price,
+      categoryId: createProductDto.categoryId,
       status: true,
     };
     const productExists = await this.prisma.product.findUnique({
@@ -23,6 +25,12 @@ export class ProductService {
       },
     });
     if (productExists) throw new BadRequestException('Produto já existe');
+    const category = await this.prisma.category.findUnique({
+      where: {
+        id: createProductDto.categoryId,
+      },
+    });
+    if (!category) throw new NotFoundException('Categoria não encontrada');
 
     if (createProductDto.images && createProductDto.images.length > 0) {
       const imgData = [];
@@ -41,6 +49,7 @@ export class ProductService {
         data: {
           name: createProductDto.name,
           price: createProductDto.price,
+          categoryId: createProductDto.categoryId,
           status: true,
           image: {
             create: imgData,
@@ -55,19 +64,71 @@ export class ProductService {
     return { data: product };
   }
 
-  async findAll({ take, skip }): Promise<any> {
+  async findAll({ take, skip, category }): Promise<any> {
     const total = await this.prisma.product.findMany();
+    const totalPages = total.length / take;
+    if (category && category !== 0) {
+      const categoryProducts = await this.prisma.category.findUnique({
+        where: {
+          id: parseInt(category),
+        },
+        include: {
+          product: true,
+          _count: true,
+        },
+      });
+      const totalCategoryProducts = Math.ceil(
+        categoryProducts._count.product / take,
+      );
+      const categoryProductsList = await this.prisma.category.findMany({
+        skip: parseInt(skip),
+        take: parseInt(take),
+        orderBy: {
+          name: 'asc',
+        },
+        where: {
+          id: parseInt(category),
+        },
+        include: {
+          product: {
+            include: {
+              image: true,
+            },
+          },
+          _count: true,
+        },
+      });
+      categoryProductsList[0].product.map((product) => {
+        if (product.image && product.image.length > 0) {
+          product.image[0].url = `${appConfig().baseURL}/product/uploads/${
+            product.image[0].url
+          }`;
+        }
+      });
+      return {
+        data: categoryProductsList[0].product,
+        total: totalCategoryProducts,
+      };
+    }
     const data = await this.prisma.product.findMany({
-      skip,
-      take,
+      skip: parseInt(skip),
+      take: parseInt(take),
       orderBy: {
         name: 'asc',
       },
       include: {
         image: true,
+        category: true,
       },
     });
-    return { data, total: total.length };
+    data.map((product) => {
+      if (product.image && product.image.length > 0) {
+        product.image[0].url = `${appConfig().baseURL}/product/uploads/${
+          product.image[0].url
+        }`;
+      }
+    });
+    return { data, total: Math.ceil(totalPages) };
   }
 
   async findOne(id: number): Promise<{ data: CreateProductDto }> {
@@ -183,5 +244,16 @@ export class ProductService {
       await unlink(`./public/${images[i].url}`);
     }
     return;
+  }
+
+  async deleteAll() {
+    const images = await this.prisma.image.findMany();
+    await this.prisma.image.deleteMany();
+    await this.prisma.product.deleteMany();
+    for(let i in images) {
+      await unlink(`./public/${images[i].url}`);
+    }
+    //let files = await readdir('./public'); // Retorna um array com o nome de todos os arquivos que estão dentro de uma pasta
+    //await rmdir(`./public`, { recursive: true }); // Apaga uma pasta inteira
   }
 }

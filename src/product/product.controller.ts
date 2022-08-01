@@ -43,8 +43,8 @@ export class ProductController {
   @Public()
   @Get()
   findAll(@Query() query: FIlterDto) {
-    const { skip = 0, take = 1 } = query;
-    return this.productService.findAll({ skip, take });
+    const { skip = 0, take = 5, category } = query;
+    return this.productService.findAll({ skip, take, category });
   }
 
   @Public()
@@ -84,5 +84,11 @@ export class ProductController {
   @Get('/uploads/:img')
   getImagePath(@Param('img') image: string, @Res() res: Response) {
     res.sendFile(image, { root: 'public' });
+  }
+
+  @Delete('/delete-all/all')
+  @Roles(Role.Admin)
+  deleteProducts() {
+    return this.productService.deleteAll();
   }
 }

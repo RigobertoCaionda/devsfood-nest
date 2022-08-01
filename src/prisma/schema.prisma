@@ -26,16 +26,25 @@ model Role {
 }
 
 model Product {
-  id    Int    @default(autoincrement()) @id
-  name  String @unique
-  price Float
-  status Boolean
-  image Image[]
+  id         Int     @default(autoincrement()) @id
+  name       String  @unique
+  price      Float
+  status     Boolean
+  image      Image[]
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
 }
 
 model Image {
-  id         Int     @default(autoincrement()) @id
-  url        String  @unique
-  product    Product @relation(fields: [productId], references: [id])
+  id         Int      @default(autoincrement()) @id
+  url        String   @unique
+  product    Product  @relation(fields: [productId], references: [id])
   productId  Int
+}
+
+model Category {
+  id      Int     @default(autoincrement()) @id
+  name    String
+  image   String
+  product Product[]
 }

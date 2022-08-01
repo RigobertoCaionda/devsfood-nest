@@ -1,10 +1,14 @@
-import { IsInt, IsOptional } from 'class-validator';
+import { IsString, IsOptional } from 'class-validator';
 export class FIlterDto {
   @IsOptional()
-  @IsInt()
-  skip?: number;
+  @IsString()
+  skip?: string;
 
   @IsOptional()
-  @IsInt()
-  take: string;
+  @IsString()
+  take?: string;
+
+  @IsOptional()
+  @IsString()
+  category?: string;
 }
