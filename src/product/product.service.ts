@@ -88,16 +88,13 @@ export class ProductService {
         categoryProducts._count.product / take,
       );
       const categoryProductsList = await this.prisma.category.findMany({
-        skip: parseInt(skip),
-        take: parseInt(take),
-        orderBy: {
-          name: 'asc',
-        },
         where: {
           id: parseInt(category),
         },
         include: {
           product: {
+            skip: parseInt(skip), // Fazendo a paginação dos produtos que a categria está trazendo na relação
+            take: parseInt(take),
             include: {
               image: true,
             },
