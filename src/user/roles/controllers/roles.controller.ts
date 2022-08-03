@@ -22,7 +22,7 @@ export class RolesController {
   @Roles(Role.Admin)
   @Get()
   index(@Query() query: FIlterDto) {
-    const { skip = 0, take = 1 } = query;
+    const { skip = 0, take = 10 } = query;
     return this.rolesService.index({
       skip,
       take,

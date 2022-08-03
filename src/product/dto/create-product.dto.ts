@@ -2,7 +2,6 @@ import {
   IsArray,
   IsInt,
   IsNotEmpty,
-  IsNumber,
   IsObject,
   IsOptional,
   IsString,
@@ -17,10 +16,10 @@ export class CreateProductDto {
   @IsNotEmpty()
   name: string;
 
-  @IsNumber()
-  price: number;
+  @IsString()
+  price: number; // Recebendo como string pq o valor virá de um formData e um formData só envia string ou blob
 
-  @IsNumber()
+  @IsString()
   categoryId: number;
 
   @IsOptional()

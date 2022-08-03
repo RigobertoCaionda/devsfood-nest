@@ -13,6 +13,13 @@ import appConfig from 'src/auth/env-helper/app.config';
 export class ProductService {
   constructor(private prisma: PrismaService) {}
   async create(createProductDto: CreateProductDto): Promise<any> {
+    if(Number(createProductDto.categoryId).toString() == 'NaN') {
+        throw new BadRequestException('Categoria inválida');
+      }
+      
+    if(Number(createProductDto.price).toString() == 'NaN') {
+        throw new BadRequestException('Preço inválido');
+      }
     let newCreateProductDto = {
       name: createProductDto.name,
       price: createProductDto.price,
@@ -27,7 +34,7 @@ export class ProductService {
     if (productExists) throw new BadRequestException('Produto já existe');
     const category = await this.prisma.category.findUnique({
       where: {
-        id: createProductDto.categoryId,
+        id: Number(createProductDto.categoryId), // Não permite transformá-lo em inteiro, mas aceita que eu o transforme em number
       },
     });
     if (!category) throw new NotFoundException('Categoria não encontrada');
@@ -48,8 +55,8 @@ export class ProductService {
       const product = await this.prisma.product.create({
         data: {
           name: createProductDto.name,
-          price: createProductDto.price,
-          categoryId: createProductDto.categoryId,
+          price: Number(createProductDto.price),
+          categoryId: Number(createProductDto.categoryId),
           status: true,
           image: {
             create: imgData,
