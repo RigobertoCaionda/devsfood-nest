@@ -82,7 +82,7 @@ export class ProductService {
         include: {
           product: true,
           _count: true,
-        },
+        }
       });
       const totalCategoryProducts = Math.ceil(
         categoryProducts._count.product / take,
