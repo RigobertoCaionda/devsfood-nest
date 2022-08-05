@@ -30,7 +30,7 @@ export class AuthService {
         id: user.id,
         name: user.name,
         role: role.data.name,
-      }), // Como parametro do sign, passamos o payload, o payload é uma informação (Geralmente) sobre o usuário que adicionamos ao token. No payload aparece os dados que mandaste e tmbm o tempo que foi criado o token (iat) e o tempo que vai expirar (exp)
+      }),
     };
   }
 }

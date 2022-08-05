@@ -34,7 +34,7 @@ export class ProductService {
     if (productExists) throw new BadRequestException('Produto já existe');
     const category = await this.prisma.category.findUnique({
       where: {
-        id: Number(createProductDto.categoryId), // Não permite transformá-lo em inteiro, mas aceita que eu o transforme em number
+        id: Number(createProductDto.categoryId),
       },
     });
     if (!category) throw new NotFoundException('Categoria não encontrada');

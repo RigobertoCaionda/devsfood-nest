@@ -3,4 +3,3 @@ export enum Role {
   Admin = 'administrador',
   Crm = 'crm',
 }
-// Simplesmente para tipagem, caso eu não quiser usar, posso remover
