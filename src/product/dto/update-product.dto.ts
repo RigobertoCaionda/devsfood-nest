@@ -3,7 +3,6 @@ import {
   IsArray,
   IsBoolean,
   IsInt,
-  IsNumber,
   IsObject,
   IsOptional,
   IsString,
@@ -20,8 +19,12 @@ export class UpdateProductDto extends PartialType(CreateProductDto) {
   name?: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsString()
   price?: number;
+
+  @IsOptional()
+  @IsString()
+  categoryId?: number;
 
   @IsOptional()
   @IsBoolean()

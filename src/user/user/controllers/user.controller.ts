@@ -53,7 +53,6 @@ export class UserController {
     return this.userService.create(body);
   }
 
-  @Roles(Role.Admin)
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -67,7 +66,6 @@ export class UserController {
     return this.userService.update(body, id);
   }
 
-  @Roles(Role.Admin)
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) id: number) {
     return this.userService.delete(id);

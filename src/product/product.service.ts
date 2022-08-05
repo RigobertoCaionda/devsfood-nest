@@ -71,6 +71,10 @@ export class ProductService {
     return { data: product };
   }
 
+  async findAllWithNoPagination(): Promise<any> {
+    const data = await this.prisma.product.findMany();
+    return { data };
+  }
   async findAll({ take, skip, category }): Promise<any> {
     const total = await this.prisma.product.findMany();
     const totalPages = total.length / take;
@@ -171,10 +175,9 @@ export class ProductService {
     const newUpdateProductDto: any = {};
     if (updateProductDto.id) newUpdateProductDto.id = updateProductDto.id;
     if (updateProductDto.name) newUpdateProductDto.name = updateProductDto.name;
-    if (updateProductDto.price)
-      newUpdateProductDto.price = updateProductDto.price;
-    if (updateProductDto.status)
-      newUpdateProductDto.status = updateProductDto.status;
+    if (updateProductDto.price) newUpdateProductDto.price = Number(updateProductDto.price);
+    if (updateProductDto.categoryId) newUpdateProductDto.categoryId = Number(updateProductDto.categoryId);
+    if (updateProductDto.status) newUpdateProductDto.status = updateProductDto.status;
 
     const product = await this.prisma.product.findUnique({
       where: {
@@ -217,6 +220,9 @@ export class ProductService {
       where: {
         id,
       },
+      include: {
+        image: true
+      }
     });
     return { data: new_product };
   }

@@ -48,6 +48,12 @@ export class ProductController {
   }
 
   @Public()
+  @Get('/find/all/no-pagination')
+  findAllWithNoPagination() {
+    return this.productService.findAllWithNoPagination();
+  }
+
+  @Public()
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.productService.findOne(id);

@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { PrismaService } from 'src/services/prisma.service';
 import { RolesService } from 'src/user/roles/services/roles.service';
@@ -14,6 +15,7 @@ export class UserService {
   constructor(
     private prisma: PrismaService,
     private rolesService: RolesService,
+    private jwtService: JwtService,
   ) {}
 
   async index({ skip, take }): Promise<any> {
@@ -56,13 +58,21 @@ export class UserService {
     return { data: user };
   }
 
-  async create(userDto: UserDto): Promise<UserDto> {
+  async create(userDto: UserDto): Promise<any> {
     let role = await this.rolesService.show(userDto.roleId);
     if (!role.data) throw new NotFoundException('Cargo não encontrado');
 
     let user = await this.findByEmail(userDto.email);
     if (user.data) throw new BadRequestException('Email já existe');
-    return await this.prisma.user.create({ data: userDto });
+    let data = await this.prisma.user.create({ data: userDto });
+    return {
+      token: this.jwtService.sign({
+        id: data.id,
+        name: data.name,
+        role: role.data.name,
+      }),
+      data,
+    };
   }
 
   async update(userDto: UpdateUserDto, id: number): Promise<User> {
