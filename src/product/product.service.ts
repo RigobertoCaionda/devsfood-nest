@@ -240,7 +240,6 @@ export class ProductService {
       },
     });
     await this.prisma.image.deleteMany({
-      // Primeiro apaga a imagem e depois o produto, caso contrário, vai dar erro de constraint
       where: {
         productId: id,
       },
