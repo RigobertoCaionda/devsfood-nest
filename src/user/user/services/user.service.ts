@@ -4,7 +4,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-//import { User } from '@prisma/client'; Ver isso
 import { PrismaService } from 'src/services/prisma.service';
 import { RolesService } from 'src/user/roles/services/roles.service';
 import { UpdateUserDto } from '../dtos/update_user';

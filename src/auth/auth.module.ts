@@ -9,7 +9,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { JwtConfig } from './env-helper/jwt.config';
 
 @Module({
-  controllers: [AuthController], 
+  controllers: [AuthController],
   providers: [
     AuthService,
     PrismaService,

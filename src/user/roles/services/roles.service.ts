@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RoleDto } from '../dtos/role';
-//import { Role } from '@prisma/client'; Ver isso
 import { PrismaService } from 'src/services/prisma.service';
 
 @Injectable()
