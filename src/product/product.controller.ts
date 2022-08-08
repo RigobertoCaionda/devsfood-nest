@@ -35,7 +35,6 @@ export class ProductController {
     @Body() createProductDto: CreateProductDto,
     @UploadedFiles() files: Array<Express.Multer.File>,
   ) {
-    // Prioridade: Interceptor e depois Pipe
     createProductDto.images = files;
     return this.productService.create(createProductDto);
   }
