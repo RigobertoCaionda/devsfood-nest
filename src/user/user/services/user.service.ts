@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@prisma/client';
+//import { User } from '@prisma/client'; Ver isso
 import { PrismaService } from 'src/services/prisma.service';
 import { RolesService } from 'src/user/roles/services/roles.service';
 import { UpdateUserDto } from '../dtos/update_user';
@@ -75,7 +75,7 @@ export class UserService {
     };
   }
 
-  async update(userDto: UpdateUserDto, id: number): Promise<User> {
+  async update(userDto: UpdateUserDto, id: number): Promise<any> {
     if (userDto.roleId) {
       let role = await this.rolesService.show(userDto.roleId);
       if (!role.data) throw new NotFoundException('Cargo não encontrado');
