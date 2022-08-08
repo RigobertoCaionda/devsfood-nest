@@ -1,4 +1,12 @@
-import { BadRequestException, Body, Controller, Get, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Public } from 'src/auth/decorators/skip-auth';
@@ -9,20 +17,23 @@ import { CategoryService } from './services/category.service';
 
 @Controller('categories')
 export class CategoryController {
-    constructor(private categoryService: CategoryService) {}
-    
-    @Get()
-    @Public()
-    index() {
-        return this.categoryService.findAll();
-    }
+  constructor(private categoryService: CategoryService) {}
 
-    @Post()
-    @Roles(Role.Admin)
-     @UseInterceptors(FileInterceptor('file', fileInterceptorOptionsHelper))
-     create(@Body() body: CreateCategoryDto, @UploadedFile() file: Express.Multer.File) {
-        if(!file) throw new BadRequestException('Precisa enviar uma imagem');
-        body.image = file.filename;
-        return this.categoryService.create(body);
-     }
+  @Get()
+  @Public()
+  index() {
+    return this.categoryService.findAll();
+  }
+
+  @Post()
+  @Roles(Role.Admin)
+  @UseInterceptors(FileInterceptor('file', fileInterceptorOptionsHelper))
+  create(
+    @Body() body: CreateCategoryDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (!file) throw new BadRequestException('Precisa enviar uma imagem');
+    body.image = file.filename;
+    return this.categoryService.create(body);
+  }
 }
