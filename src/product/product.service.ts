@@ -75,6 +75,7 @@ export class ProductService {
     const data = await this.prisma.product.findMany();
     return { data };
   }
+
   async findAll({ take, skip, category }): Promise<any> {
     const total = await this.prisma.product.findMany();
     const totalPages = total.length / take;
@@ -122,7 +123,7 @@ export class ProductService {
       skip: parseInt(skip),
       take: parseInt(take),
       orderBy: {
-        name: 'asc',
+        id: 'desc',
       },
       include: {
         image: true,
