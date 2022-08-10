@@ -11,6 +11,6 @@ import { UserService } from './user/services/user.service';
 @Module({
   controllers: [UserController, RolesController],
   providers: [UserService, RolesService, PrismaService, JwtStrategy],
-  imports: [JwtModule.registerAsync(JwtConfig)],
+  imports: [JwtModule.registerAsync(JwtConfig)]
 })
 export class UserModule {}

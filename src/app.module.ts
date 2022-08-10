@@ -9,6 +9,6 @@ import { ProductModule } from './product/product.module';
 @Module({
   imports: [UserModule, AuthModule, ProductModule],
   controllers: [AppController],
-  providers: [AppService, { provide: APP_GUARD, useClass: RolesGuard }],
+  providers: [AppService, { provide: APP_GUARD, useClass: RolesGuard }]
 })
 export class AppModule {}
